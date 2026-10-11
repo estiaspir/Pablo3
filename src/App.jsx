@@ -5,11 +5,13 @@ import Home from './pages/Home'
 import Auth from './pages/Auth'
 import Checkout from './pages/Checkout'
 import Navbar from './components/Navbar'
+import AuthProvider from './context/AuthContext'
 
 function App() {
   
 
   return (
+    <AuthProvider>
     <div className='app'>
      <Navbar/>
        <p>This is the first p</p>  
@@ -22,6 +24,7 @@ function App() {
 
    
     </div>
+    </AuthProvider>
   )
 }
 
