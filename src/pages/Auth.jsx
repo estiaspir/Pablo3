@@ -3,12 +3,13 @@ import { useForm } from 'react-hook-form'
 import AuthProvider from '../context/AuthContext'
 import { AuthContext } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 export default function Auth() {
-    const [mode,setMode] = useState('Signup')
+   const [mymode,setMymode] = useState('Signup')
     const [error, setError] = useState(null);
     const { register,handleSubmit,formState: { errors } } = useForm()
-   const {signUp, user, logOut, login} = useContext(AuthContext)
+   const {signUp, user, logOut, login, dologin, doSignup, mode } = useAuth()
    const navigate = useNavigate()
     
    function onSubmit(data) {
@@ -19,6 +20,7 @@ export default function Auth() {
     }
     else{
        result = login(data.email, data.password)
+      
     }
 
     if(result.success){
@@ -32,13 +34,22 @@ export default function Auth() {
      console.log(result)
     }
 
+    function userWantsLogin(){
+        if(mymode === 'Sinup'){
+        setMode('Login')
+    }
+    else{
+        setMymode('Signup')
+    }
+    }
+
     return (
         <div className='page'>
             <div className='container'>
                 <div className='auth-container'>
                     {user && <p> User loged in: {user.email}</p>}
                     <button onClick={()=>logOut()}>Logout</button>
-                    <h1 className='page-title'>{mode=== 'Signup'?  'Sign up':'Login'}</h1>
+                    <h1 className='page-title' id="myh1">{mode=== 'Signup'?  'Sign up':'Login' }</h1>
                     <form className='auth-form' onSubmit={handleSubmit(onSubmit)}>
                         {error && <div className='error-message'>{error}</div>}
                         <div className='form-group'>
@@ -59,14 +70,14 @@ export default function Auth() {
                                 },)} />
                               {errors.password && <span className='form-error'>{errors.password.message}</span>}
                         </div>
-                        <button className='btn btn-primary' type='submit'>{mode=== 'Signup'?  'Sign up':'Login'}</button>
+                        <button className='btn btn-primary' type='submit'>{mode=== 'Signup'   ?  'Sign up':'Login'}</button>
                     </form>
                     <div className='auth-switch'>
                         {mode === 'Signup' ?
                             <p>Already have an account? <span className='auth-link'
-                            onClick={()=>{setMode('Login')}}>Login</span></p> : 
+                            onClick={ ()=>dologin()}>Login</span></p> : 
                             <p>Don't have an account? <span className='auth-link'
-                            onClick={()=>{setMode('Signup')}}>Sign up</span></p>
+                            onClick={()=>doSignup()}>Sign up</span></p>
                          }
                        
                     </div>
